@@ -1,0 +1,37 @@
+---
+title: "Exercise 1-part2"
+author: "Dandan Peng"
+date: "2017-9-26"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+We sample 100 values from a log-normal distribution (mu=1,sigma=0.25)
+
+```{r sample}
+x<-rlnorm(100,1,0.25)
+```
+The mean and variance of the 100 sample is:
+```{mean and variance}
+mean(x)
+var(x)
+#mean(x)=2.771041
+#var(x)=0.4928987
+```
+
+Then we create a histogram of the log-normal distribution:
+```{r histogram plot}
+hist(x,main="Histogram of 100 values from a log-normal distribution")
+```
+
+Next, plot the distribution on the log scale.
+```{r log scale histogram}
+hist(log(x),main="Histogram of 100 values from a log-normal distribution on log scale")
+```
+
