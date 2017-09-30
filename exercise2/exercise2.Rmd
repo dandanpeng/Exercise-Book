@@ -1,0 +1,106 @@
+---
+title: "Exercise 2"
+author: "Dandan Peng"
+date: "2017-9-28"
+output: html_document
+---
+
+###Exploratory Data Analysis
+
+Do an exploratory data analysis of a matrix of expression values. Load the data and display:
+
+- distributions:*boxplot, density, limma::plotDensities*
+
+- normalization:*limma::normalizeQuantiles*
+
+- clustering:*hclust*
+
+- heatmap:*heatmap.2* or *pheatmap*
+
+- correlation matrix:*cor* and *image*
+
+- reduced dimensionality representation: *cmdscale* and *prcomp*
+
+##Required Libraries
+```{}
+library(limma)
+library(gplots)
+library(pheatmap)
+library(corrplot)
+```
+
+###Data Import
+
+```{}
+anno = read.table("SampleAnnotation.txt", as.is=TRUE, sep="\t",quote="",row.names=1,header=TRUE)
+x = read.table("expressiondata.txt", as.is=TRUE, sep="\t", quote="", row.names=1, header=TRUE, check.names = FALSE)
+x = as.matrix(x)
+```
+
+###Define samples and colors and phenotype 
+```{}
+samples = rownames(anno)
+colors = rainbow(nrow(anno))
+isNorm = anno$TissueType == "norm"
+isSick = anno$TissueType == "sick"
+isAcute = anno$TissueType == "acute"
+```
+
+###Data Normalization 
+```{}
+norm_x=normalizeQuantiles(x,ties=TRUE)
+#or log normalization
+logx=log(x)
+```
+Acrually I compare the boxlpot of raw data and normalized data(normlizeQuantiles method & log normlize method), log normalization is better. So I will use log(x) below.
+
+###Distribution
+```{}
+##boxplot
+boxplot(logx,las=2,main='Boxplot') 
+
+##density distribution
+plot(density(logx[,1]),col=colors[1],main='Density Distribution')
+for(i in 2:ncol(logx)){
+  lines(density(logx[,i]),col=colors[i])
+}
+legend('topright',col=colors,legend=samples,pch=1)
+
+##limma::plotDensities
+plotDensities(norm_x,main='Limma Density',col=colors,legend=FALSE)
+legend('topright',col=colors,legend=samples,pch=1)
+```
+From the boxplot, we can see that outliers are concentrated, that means some gene are expressed highly.
+From the density plot, we can also get this conclusion. 
+
+##Clustering
+```{}
+dist.r=dist(logx,method="euclidean")
+hc.r=hclust(dist.r,method="ward")
+plot(hc.r,hang=-1,labels=samples)
+```
+
+##heatmap
+```{}
+heatmap.2(norm_x,dendrogram="col")
+annotation<-data.frame(condition=c(rep('isNorm',6),rep('isSick',5),rep('isAcute',6)))
+pheatmap(as.data.frame(logx),annotation=annotation,cluster_rows=F,scale='column')
+
+```
+
+##correlation matrix
+```{}
+cor_matrix=cor(logx)
+corrplot(cor_matrix,type="upper",title='Image of Correlation Matrix')
+```
+
+##Reduced Dimensionality Representation
+```{}
+cmds_x=cmdscale(dist(norm_x))
+plot(cmds_x,main='Reduced Dimensionality')
+
+#Principal Component Analysis
+pca_x<-prcomp(norm_x,center=T)
+```
+cmdscale takes a set of dissimilarities and returns a set of points such that the distances between the points are approximately equal to the dissimilarities.The plot of cmds_x shows that some points concentrate and some are away from the concentration.
+
