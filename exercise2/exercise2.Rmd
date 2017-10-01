@@ -21,7 +21,7 @@ Do an exploratory data analysis of a matrix of expression values. Load the data 
 
 - reduced dimensionality representation: *cmdscale* and *prcomp*
 
-## Required Libraries
+### Required Libraries
 ```{}
 library(limma)
 library(gplots)
@@ -73,14 +73,14 @@ legend('topright',col=colors,legend=samples,pch=1)
 From the boxplot, we can see that outliers are concentrated, that means some gene are expressed highly.
 From the density plot, we can also get this conclusion. 
 
-## Clustering
+### Clustering
 ```{}
 dist.r=dist(logx[1:1000,],method="euclidean")
 hc.r=hclust(dist.r,method="ward")
 plot(hc.r,hang=-1,labels=samples)
 ```
 
-## heatmap
+### heatmap
 ```{}
 heatmap.2(norm_x,dendrogram="col")
 annotation<-data.frame(condition=c(rep('isNorm',6),rep('isSick',5),rep('isAcute',6)))
@@ -88,13 +88,13 @@ pheatmap(as.data.frame(logx),annotation=annotation,cluster_rows=F,scale='column'
 
 ```
 
-## correlation matrix
+### correlation matrix
 ```{}
 cor_matrix=cor(logx)
 corrplot(cor_matrix,type="upper",title='Image of Correlation Matrix')
 ```
 
-## Reduced Dimensionality Representation
+### Reduced Dimensionality Representation
 ```{}
 cmds_x=cmdscale(dist(norm_x))
 plot(cmds_x,main='Reduced Dimensionality')
