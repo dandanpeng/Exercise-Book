@@ -75,7 +75,7 @@ From the density plot, we can also get this conclusion.
 
 ##Clustering
 ```{}
-dist.r=dist(logx,method="euclidean")
+dist.r=dist(logx[1:1000,],method="euclidean")
 hc.r=hclust(dist.r,method="ward")
 plot(hc.r,hang=-1,labels=samples)
 ```
