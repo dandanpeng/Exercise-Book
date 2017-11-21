@@ -1,0 +1,29 @@
+---
+title: "Exercise 9"
+author: "Dandan Peng"
+date: "2017-11-20"
+output: html_document
+---
+Summray of the sample: *Mus musculus* strain B6NCrl forebrain tissue mixed sex embryo (10.5 days)
+
+Data download from: ENCODE database, forward reads
+
+```{}
+wget https://www.encodeproject.org/files/ENCFF044SLN/@@download/ENCFF044SLN.fastq.gz
+wget https://www.encodeproject.org/files/ENCFF379AAB/@@download/ENCFF379AAB.fastq.gz
+
+fastqc -o ./tmp.result/fastQC/ -t 6 ./tmp.data/fastq/ENCFF044SLN.fastq
+
+```
+
+Report is in the HTML file. From the report, I think it is not a good sequencing result. We receive following five failures.
+
+Per base sequence content: In a random library, the lines in this plot should run parallel with each other. But in this plot, they are hugely imbalanced from each other.
+
+Per sequence GC content: I expect to see a roughly normal distribution of GC content where the central peak correspond to the overall GC content of the undelying genome. But the deviation from the normal distribution cannot be ignored. According to FastQC manual, the sum of the deviations represents more than 30% of the reads.
+
+Sequence duplication levels: The plot shows the proportion of the library which is made up of sequences in each of the different duplication level bins. We got failure because non-unique sequences make up more than 50% of the total in this data.
+
+Overrepresented sequences: A normal high-throughput library will contain a diverse set of sequences, with no individual sequence making up a tiny fraction of the whole. This module issue a failure because some sequences are found to represent more than 1% of the total.
+
+Kmer Content: The Kmer module starts from the assumption that any small fragment of sequence should not have a positional bias in its apearance within a diverse library. We got failure because some k-mer is imbalanced with a binomial p-value < 10^-5. 
